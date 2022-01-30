@@ -1,0 +1,20 @@
+{
+  "name": "server-side-with-node",
+  "version": "1.0.0",
+  "description": "This is a data selfie app by Alex",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "data",
+    "selfie"
+  ],
+  "author": "Alex",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2",
+    "nedb": "^1.8.0"
+  }
+}
