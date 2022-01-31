@@ -1,6 +1,7 @@
 async function getData () {
     const response = await fetch("/api") // GET protocol
     const data = await response.json()
+    console.log(data)
     
     for (item of data) {
         const root = document.createElement("div")
@@ -10,7 +11,7 @@ async function getData () {
 
         name.textContent = `name: ${item.name}`
         geo.textContent = `${item.lat}°, ${item.lon}°`
-        const dateString = new Date(item.timestamp).toLocaleString() // Convert number to date
+        const dateString = new Date(item.time).toLocaleString() // Convert number to date
         date.textContent = dateString
 
         root.append(name, geo, date, document.createElement("br"))

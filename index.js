@@ -1,6 +1,6 @@
 // npm init - initilse package.json so you can download third-party modules
 const express = require("express") // Import module
-const Datastore = require("nedb") // Import database module
+const sqlite3 = require('sqlite3').verbose()
 
 const app = express()
 const port = process.env.PORT || 3000 // Return port number for online server service or uses 3000
@@ -9,16 +9,21 @@ app.listen(port, () => console.log(`Listening at ${port}`)) // Port number and c
 app.use(express.static("public")) // Make public folder public - run when connection is made 
 app.use(express.json({limit: "1mb"}))
 
-const database = new Datastore("database.db") // Create database
-database.loadDatabase() // Load database
+const db = new sqlite3.Database("database.db", sqlite3.OPEN_READWRITE, (err) => {
+    if (err) {
+      console.error(err.message);
+    }
+    console.log("Connected to Database");
+  })
 
 app.get("/api", (request, response) => {
-    database.find({}, (err, data) => {
+
+    db.all("SELECT * FROM data", [], (err, rows) => {
         if (err) {
-            response.end() // End response
+          throw err;
         }
-        response.json(data)
-    })
+        response.json(rows)
+      });
 })
 
 app.post("/api", (request, response) => {
@@ -27,8 +32,13 @@ app.post("/api", (request, response) => {
     const timestamp = Date.now()
     data.timestamp = timestamp
 
-    database.insert(data)
-    response.json(data) // Send data
+    const sql = `INSERT INTO data VALUES (${data.lat}, ${data.lon}, '${data.name}', ${data.timestamp})`
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            throw err;
+        }
+    });
+    response.json({"query": sql}) // Send data
 })
 
 /*
